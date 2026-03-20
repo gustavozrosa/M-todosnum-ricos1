@@ -2,7 +2,7 @@ import numpy as np
 import math
 import matplotlib.pyplot as plt
 
-# função real
+# função real gsf
 def f_real(x):
     return 1/(1-x)
 
