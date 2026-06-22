@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 # ===== Dados de entrada =====
 date = {
@@ -66,3 +67,37 @@ print("f(3.4) =", f2)
 print("\nNewton 3º grau:")
 print("Coeficientes =", coef3)
 print("f(3.4) =", f3)
+
+# ===== Gráfico =====
+x_plot = np.linspace(2.0, 4.2, 200)
+
+y_plot1 = np.zeros(len(x_plot))
+y_plot2 = np.zeros(len(x_plot))
+y_plot3 = np.zeros(len(x_plot))
+
+for i in range(len(x_plot)):
+    y_plot1[i] = newton(x1, coef1, x_plot[i])
+    y_plot2[i] = newton(x2, coef2, x_plot[i])
+    y_plot3[i] = newton(x3, coef3, x_plot[i])
+
+plt.figure(figsize=(8, 5))
+
+# Dados originais
+plt.plot(df['x'], df['y'], 'or', label='Dados da Tabela')
+
+# Polinômios de Newton
+plt.plot(x_plot, y_plot1, '-k', label='Newton 1º Grau')
+plt.plot(x_plot, y_plot2, '-b', label='Newton 2º Grau')
+plt.plot(x_plot, y_plot3, '-g', label='Newton 3º Grau')
+
+# Pontos estimados em x = 3.4
+plt.plot(x_desejado, f1, 'ok', label='f(3.4) 1º Grau')
+plt.plot(x_desejado, f2, 'ob', label='f(3.4) 2º Grau')
+plt.plot(x_desejado, f3, 'og', label='f(3.4) 3º Grau')
+
+plt.xlabel('x')
+plt.ylabel('y')
+plt.title('Questão 4a - Interpolação de Newton')
+plt.legend()
+plt.grid(True)
+plt.show()

@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 # ===== Dados de entrada =====
 date = {
@@ -55,3 +56,37 @@ print("f(3.4) =", f2)
 
 print("\nLagrange 3º grau:")
 print("f(3.4) =", f3)
+
+# ===== Gráfico =====
+x_plot = np.linspace(2.0, 4.2, 200)
+
+y_plot1 = np.zeros(len(x_plot))
+y_plot2 = np.zeros(len(x_plot))
+y_plot3 = np.zeros(len(x_plot))
+
+for i in range(len(x_plot)):
+    y_plot1[i] = lagrange(x1, y1, x_plot[i])
+    y_plot2[i] = lagrange(x2, y2, x_plot[i])
+    y_plot3[i] = lagrange(x3, y3, x_plot[i])
+
+plt.figure(figsize=(8, 5))
+
+# Dados originais
+plt.plot(df['x'], df['y'], 'or', label='Dados da Tabela')
+
+# Polinômios de Lagrange
+plt.plot(x_plot, y_plot1, '-k', label='Lagrange 1º Grau')
+plt.plot(x_plot, y_plot2, '-b', label='Lagrange 2º Grau')
+plt.plot(x_plot, y_plot3, '-g', label='Lagrange 3º Grau')
+
+# Pontos estimados em x = 3.4
+plt.plot(x_desejado, f1, 'ok', label='f(3.4) 1º Grau')
+plt.plot(x_desejado, f2, 'ob', label='f(3.4) 2º Grau')
+plt.plot(x_desejado, f3, 'og', label='f(3.4) 3º Grau')
+
+plt.xlabel('x')
+plt.ylabel('y')
+plt.title('Questão 4b - Interpolação de Lagrange')
+plt.legend()
+plt.grid(True)
+plt.show()
