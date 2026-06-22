@@ -14,40 +14,49 @@ df = pd.DataFrame(date)
 # ===== Valor desejado =====
 x_desejado = 3.5
 
-# ===== Construindo a Matriz de Vandermonde =====
-n = len(df['x'])
+# ===== Função das Diferenças Divididas de Newton =====
+def diferencas_divididas(x, y):
+    n = len(x)
+    coef = np.array(y, dtype=float)
 
-A = np.zeros((n, n))
+    for j in range(1, n):
+        for i in range(n-1, j-1, -1):
+            coef[i] = (coef[i] - coef[i-1]) / (x[i] - x[i-j])
 
-for i in range(n):
-    for j in range(n):
-        A[i, j] = df['x'][i]**j
+    return coef
 
-b = np.array(df['y'])
+# ===== Função para Calcular o Polinômio de Newton =====
+def newton(x, coef, x_desejado):
+    n = len(coef)
+    resultado = coef[n-1]
 
-# ===== Solução do Sistema Linear =====
-ai = np.linalg.solve(A, b)
+    for i in range(n-2, -1, -1):
+        resultado = resultado * (x_desejado - x[i]) + coef[i]
 
-print("Coeficientes do polinômio:")
-print(ai)
+    return resultado
+
+# ===== Aplicando o Método de Newton =====
+x = np.array(df['x'])
+y = np.array(df['y'])
+
+coef = diferencas_divididas(x, y)
+
+print("Coeficientes das diferenças divididas:")
+print(coef)
 
 # ===== Calculando y em x = 3.5 =====
-y_desejado = 0
-
-for i in range(n):
-    y_desejado = y_desejado + ai[i] * x_desejado**i
+y_desejado = newton(x, coef, x_desejado)
 
 print("\nValor interpolado:")
 print("y(3.5) =", y_desejado)
 
 # ===== Verificação nos pontos da tabela =====
-y_verificado = np.zeros(n)
+y_verificado = np.zeros(len(x))
 
-for i in range(n):
-    for j in range(n):
-        y_verificado[i] = y_verificado[i] + ai[j] * df['x'][i]**j
+for i in range(len(x)):
+    y_verificado[i] = newton(x, coef, x[i])
 
-erro = df['y'] - y_verificado
+erro = y - y_verificado
 
 print("\nValores verificados pelo polinômio:")
 print(y_verificado)
@@ -56,17 +65,20 @@ print("\nErro nos pontos da tabela:")
 print(erro)
 
 # ===== Gráfico =====
-x_plot = np.linspace(min(df['x']), max(df['x']), 200)
+x_plot = np.linspace(min(x), max(x), 200)
 
 y_plot = np.zeros(len(x_plot))
 
-for i in range(n):
-    y_plot = y_plot + ai[i] * x_plot**i
+for i in range(len(x_plot)):
+    y_plot[i] = newton(x, coef, x_plot[i])
 
 plt.plot(df['x'], df['y'], 'or', label='Dados da Tabela')
-plt.plot(x_plot, y_plot, '-b', label='Polinômio Interpolador')
+plt.plot(x_plot, y_plot, '-b', label='Polinômio de Newton')
 plt.plot(x_desejado, y_desejado, 'ok', label='y(3.5)')
+
 plt.legend()
 plt.xlabel('x')
 plt.ylabel('y')
+plt.title('Interpolação Polinomial de Newton')
+plt.grid(True)
 plt.show()
