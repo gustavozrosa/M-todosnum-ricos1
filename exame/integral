@@ -1,0 +1,28 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+f = lambda x: x**3 - 3*x**2 + x + 2
+a = 0
+b = 1
+I_real = (14)/8
+# Trapézio
+I_trap = (b-a)/2 * (f(a) + f(b))
+
+# Simpson 1/3
+h = (b-a)/2
+I_s13 = h/3 * (f(a) + 4*f((a+b)/2) + f(b))
+
+# Gauss 2 pontos
+x = ((b+a) + (b-a))/2
+I_gauss = (f(-1/np.sqrt(3))) + (f(1/np.sqrt(3)))
+dx = (b-a)/2
+
+# Erros
+erro_trap = abs((I_real - I_trap)/I_real)*100
+erro_s13 = abs((I_real - I_s13)/I_real)*100
+erro_gauss = abs((I_real - I_gauss))/I_real*100
+
+print(f"Integral = {I_real:.7f}")
+print(f"Trapézio = {I_trap:.7f} , Erro = {erro_trap:.4f}%")
+print(f"Simpson 1/3 = {I_s13:.7f} , Erro = {erro_s13:.4f}%")
+print(f"Gauss = {I_gauss: .7f} , Erro = {erro_gauss: .4f}%")
